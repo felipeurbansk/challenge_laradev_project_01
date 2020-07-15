@@ -20,16 +20,16 @@ class WebController extends Controller
         ]);
     }
 
-    public function courses()
+    public function course()
     {
         $head = $this->seo->render(
             'Página de cursos',
             'Página destinado a maiores informações do curso..',
-            route('web.courses'),
+            route('web.course'),
             asset('images/img_bg_1.jpg')
         );
 
-        return view('front.courses', [
+        return view('front.course', [
             'head' => $head
         ]);
     }
