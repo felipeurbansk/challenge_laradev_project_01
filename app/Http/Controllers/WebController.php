@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Contact;
+use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class WebController extends Controller
 {
     public function home()
     {
+        $posts = Post::orderBy('created_at', 'DESC')->limit(3)->get();
         $head = $this->seo->render(
             'Página home',
             'Uma descrição de teste para esse site que está começando agora.',
@@ -16,7 +20,8 @@ class WebController extends Controller
         );
 
         return view('front.home', [
-            'head' => $head
+            'head' => $head,
+            'posts' => $posts
         ]);
     }
 
@@ -36,6 +41,7 @@ class WebController extends Controller
 
     public function blog()
     {
+        $posts = Post::orderBy('created_at', 'DESC')->get();
         $head = $this->seo->render(
             'Página de blog',
             'Página para listagem de todos os artigos publicado em nosso blog.',
@@ -44,13 +50,26 @@ class WebController extends Controller
         );
 
         return view('front.blog', [
-            'head' => $head
+            'head' => $head,
+            'posts' => $posts
         ]);
     }
 
-    public function article()
+    public function article(Request $request, $uri)
     {
-        return view('front.article');
+        $post = Post::where('uri',  $uri)->first();
+
+        $head = $this->seo->render(
+            env('APP_NAME') . ' - ' . $post->title,
+            $post->title,
+            route('web.article', $post->uri),
+            \Illuminate\Support\Facades\Storage::url( \App\Support\Cropper::thumb($post->cover, 1200, 628) )
+        );
+
+        return view('front.article',[
+            'head' => $head,
+            'post' => $post
+        ]);
     }
 
     public function contact()
@@ -65,5 +84,11 @@ class WebController extends Controller
         return view('front.contact', [
             'head' => $head
         ]);
+    }
+
+    public function sendMail(Request $request) {
+//        return new Contact($request->all());
+
+        Mail::send(new Contact($request->all()));
     }
 }

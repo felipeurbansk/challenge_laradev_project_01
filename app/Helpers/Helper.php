@@ -6,4 +6,8 @@ if ( ! function_exists('mix_e')) {
         return url(mix($path));
     }
 
+    function default_format_date( $datetime ) {
+        return date('d/m/Y H:i:s', strtotime($datetime));
+    }
+
 }

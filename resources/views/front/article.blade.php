@@ -12,32 +12,32 @@
         <div class="container">
             <div class="row animate-box">
                 <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                    <h2>Título</h2>
-                    <p>Subtíulo</p>
+                    <h2>{{$post->title}}</h2>
+                    <p>{{$post->subtitle}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="fh5co-blog animate-box">
                     <div class="col-12 text-center">
                         <img style="max-width: 100%;"
-                             src="front/assets/images/project-4.jpg"
-                             alt="">
+                             src="{{ \Illuminate\Support\Facades\Storage::url( \App\Support\Cropper::thumb($post->cover, 800, 500) ) }}"
+                             alt="{{$post->title}}">
                     </div>
                     <div class="col-12">
                         <div class="blog-text">
-                            <span class="posted_on">01/01/2019</span>
+                            <span class="posted_on">{{ default_format_date($post->created_at) }}</span>
                             <span class="comment"><a href="">21<i class="icon-speech-bubble"></i></a></span>
-                            <p>Conteúdo do artigo</p>
+                            <p>{{$post->content}}</p>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <div class="fb-comments" data-href="url da página" data-numposts="5" data-width="100%"></div>
+                        <div class="fb-comments" data-href="{{Request::url()}}" data-numposts="5" data-width="100%"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>s
+    </div>
 
     @include('front.includes.optin')
 
@@ -45,6 +45,7 @@
 
 @section('scripts')
     <div id="fb-root"></div>
-    <script async defer
-            src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v3.2&appId=SEU_APP_ID&autoLogAppEvents=1"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v7.0&appId={{env('CLIENT_SOCIAL_FACEBOOK_APP'   )}}&autoLogAppEvents=1" nonce="6ASDYqvU">
+
+    </script>
 @endsection
